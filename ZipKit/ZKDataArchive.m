@@ -146,11 +146,41 @@
 	if (rfFlag)
 		[self.fileManager zk_combineAppleDoubleInDirectory:expansionDirectory];
 #endif
-	[self cleanUpExpansionDirectory:expansionDirectory];
-    
+    NSString *destination = [enclosingFolder stringByAppendingPathComponent:folderName];
+    BOOL destinationExists = [self.fileManager fileExistsAtPath:destination];
+    if (folderName && !destinationExists) {
+        //Special case a zip archive that is a single folder; rename that folder to the requested destination
+        NSString *newExpansionDir = [self pathToSingleSubFolder:expansionDirectory];
+        if (newExpansionDir) {
+            [self.fileManager moveItemAtPath:newExpansionDir toPath:destination error:nil];
+            [self.fileManager removeItemAtPath:expansionDirectory error:nil];
+        } else {
+            [self.fileManager moveItemAtPath:expansionDirectory toPath:destination error:nil];
+        }
+    } else {
+        [self cleanUpExpansionDirectory:expansionDirectory];
+    }
+
 	return zkSucceeded;
 }
 
+- (NSString *)pathToSingleSubFolder:(NSString *)folder {
+    NSString *subFolder = nil;
+	NSArray *dirContents = [self.fileManager contentsOfDirectoryAtPath:folder error:nil];
+    if (0 < dirContents.count && dirContents.count <= 2) {
+        for (NSString *item in dirContents) {
+            if (![item isEqualToString:ZKMacOSXDirectory]) {
+                NSString *subPath = [folder stringByAppendingPathComponent:item];
+                BOOL isDir;
+                BOOL exists = [self.fileManager fileExistsAtPath:subPath isDirectory:&isDir];
+                if (exists & isDir) {
+                    subFolder = subPath;
+                }
+            }
+        }
+    }
+    return subFolder;
+}
 
 
 #pragma mark -
