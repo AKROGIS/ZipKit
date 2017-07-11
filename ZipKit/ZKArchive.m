@@ -24,7 +24,7 @@
 	NSData *fileHeader = [fileHandle readDataOfLength:4];
 	[fileHandle closeFile];
 	UInt32 headerValue;
-	[fileHeader getBytes:&headerValue length:4];
+	[fileHeader getBytes:&headerValue length:sizeof(UInt32)];
 	return CFSwapInt32LittleToHost(headerValue) == ZKLFHeaderMagicNumber;
 }
 
@@ -78,19 +78,31 @@
 		if (![item isEqualToString:ZKMacOSXDirectory]) {
 			NSString *subPath = [expansionDirectory stringByAppendingPathComponent:item];
 			NSString *dest = [enclosingFolder stringByAppendingPathComponent:item];
-			NSUInteger i = 2;
-			while ([self.fileManager fileExistsAtPath:dest]) {
-				NSString *ext = [item pathExtension];
-				dest = [enclosingFolder stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ %lu",
-				                                                        [item stringByDeletingPathExtension], (unsigned long)i++]];
-				if (ext && [ext length] > 0)
-					dest = [dest stringByAppendingPathExtension:ext];
-			}
+
+            if (self.overwriteExistingFiles) {
+
+                if ([self.fileManager fileExistsAtPath:dest]) {
+                    [self.fileManager removeItemAtPath:dest error:nil];
+                }
+
+            } else {
+
+                NSUInteger i = 2;
+                while ([self.fileManager fileExistsAtPath:dest]) {
+                    NSString *ext = [item pathExtension];
+                    dest = [enclosingFolder stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ %lu",
+                                                                            [item stringByDeletingPathExtension], (unsigned long)i++]];
+                    if (ext && [ext length] > 0)
+                        dest = [dest stringByAppendingPathExtension:ext];
+                }
+
+            }
+
 			[self.fileManager moveItemAtPath:subPath toPath:dest error:nil];
 		}
 	}
 	[self.fileManager removeItemAtPath:expansionDirectory error:nil];
-    
+
 }
 
 #pragma mark -
