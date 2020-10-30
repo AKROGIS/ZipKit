@@ -1,4 +1,5 @@
-**This fork still exists because it has minor changes not appropriate for the upstream repo, but required for the original Park Observer.**
+**This fork still exists because it has minor changes not appropriate for the upstream repo, but required for the original Park Observer.
+It has been archived along with [Park Observer](https://github.com/AKROGIS/Observer) and can be deleted if Park Observer is deleted.**
 
 ======
 
