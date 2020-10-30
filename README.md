@@ -1,4 +1,5 @@
-ZipKit
+**This fork still exists because it has minor changes not appropriate for the upstream repo, but required for the original Park Observer.**
+
 ======
 
 ZipKit is an Objective-C framework for reading and writing Zip archives in OS X and iOS apps. It supports:
