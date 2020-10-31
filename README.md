@@ -1,6 +1,8 @@
-**This fork still exists because it has minor changes not appropriate for the upstream repo, but required for the original Park Observer.
-It has been archived along with [Park Observer](https://github.com/AKROGIS/Observer) and can be deleted if Park Observer is deleted.**
+**This fork still exists because it has minor changes not appropriate for the upstream repo,
+but required for the original [Park Observer](https://github.com/AKROGIS/Observer).
+It has been archived along with Park Observer and can be deleted if Park Observer is deleted.**
 
+ZipKit
 ======
 
 ZipKit is an Objective-C framework for reading and writing Zip archives in OS X and iOS apps. It supports:
